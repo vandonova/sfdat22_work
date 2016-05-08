@@ -46,26 +46,26 @@ def scrapePainting(url):
     if size is not None:
         size = [a.strip() for a in b.find('span', {'id': 'mnba_buybox_size'}).text.split('x')]
         if len(size) == 2:
-            height = float(size[0].replace('in.','').strip())
-            width = float(size[1].replace('in.','').strip())
+            height = float(size[0].replace('in.','').replace('in','').strip())
+            width = float(size[1].replace('in.','').replace('in','').strip())
             depth = 1.
         elif len(size) == 3:
-            height = float(size[0].replace('in.','').strip())
-            width = float(size[1].replace('in.','').strip())
-            depth = float(size[2].replace('in.','').strip())
+            height = float(size[0].replace('in.','').replace('in','').strip())
+            width = float(size[1].replace('in.','').replace('in','').strip())
+            depth = float(size[2].replace('in.','').replace('in','').strip())
     
     size_variations = b.find('div', {'id': 'variation_size_name'})
     if size_variations is not None:
         size = [a.strip() for a in size_variations.find('span', {'class': "a-size-base"}).text.split('x')]
         
         if len(size) == 2:
-            height = float(size[0].replace('in.','').strip())
-            width = float(size[1].replace('in.','').strip())
+            height = float(size[0].replace('in.','').replace('in','').strip())
+            width = float(size[1].replace('in.','').replace('in','').strip())
             depth = 1.
         elif len(size) == 3:
-            height = float(size[0].replace('in.','').strip())
-            width = float(size[1].replace('in.','').strip())
-            depth = float(size[2].replace('in.','').strip())
+            height = float(size[0].replace('in.','').replace('in','').strip())
+            width = float(size[1].replace('in.','').replace('in','').strip())
+            depth = float(size[2].replace('in.','').replace('in','').strip())
             
         price = size_variations.find('span', {'class': "a-size-mini"}).text.replace('$','').replace(',', '')
         if '.' in price:
@@ -77,6 +77,9 @@ def scrapePainting(url):
     return {'url_id': encodestring(url_id), 'artist': encodestring(artist), 'title':encodestring(title), 'image': image, 'price': price, 
             'description':encodestring(desc), 'height': height, 'width': width, 'size':size}
 
+
+paintings = []
+    
 for page in range(1,2):
     
     page_url = "http://www.amazon.com/s/ref=sr_pg_3?rh=n%3A4991425011%2Cn%3A%214991426011%2Cn%3A6685269011%2Cn%3A6685289011&page="+str(page)+"&ie=UTF8&qid=1462467907"
@@ -91,7 +94,6 @@ for page in range(1,2):
     
     url_list = url_1[::2]
 
-    paintings = []
     for url in url_list:
         try:
             paintings.append(scrapePainting(url))
