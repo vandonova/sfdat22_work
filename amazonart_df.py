@@ -79,7 +79,7 @@ def scrapePainting(url):
 
 paintings = []
 
-for page in range(1,218):
+for page in range(1,219):
     
     page_url = 'http://www.amazon.com/s/ref=lp_6685289011_pg_2?rh=n%3A4991425011%2Cn%3A%214991426011%2Cn%3A6685269011%2Cn%3A6685289011&page='+str(page)+'&ie=UTF8&qid=1462681717'
     r = requests.get(page_url)
@@ -99,7 +99,11 @@ for page in range(1,218):
         except Exception as error:
             print error
         time.sleep(random.randint(5,20))
+    
+    if page % 10 == 0:
+        df = pd.DataFrame(paintings)
+        df.to_csv("output"+str(page)+".csv", index=False)
 
 df = pd.DataFrame(paintings)
 
-df.to_csv("paintings_firstpass_df.csv", index=False)
+df.to_csv("final_df.csv", index=False)
