@@ -77,12 +77,11 @@ def scrapePainting(url):
     return {'url_id': encodestring(url_id), 'artist': encodestring(artist), 'title':encodestring(title), 'image': image, 'price': price, 
             'description':encodestring(desc), 'height': height, 'width': width, 'size':size}
 
-
 paintings = []
+
+for page in range(1,218):
     
-for page in range(1,2):
-    
-    page_url = "http://www.amazon.com/s/ref=sr_pg_3?rh=n%3A4991425011%2Cn%3A%214991426011%2Cn%3A6685269011%2Cn%3A6685289011&page="+str(page)+"&ie=UTF8&qid=1462467907"
+    page_url = 'http://www.amazon.com/s/ref=lp_6685289011_pg_2?rh=n%3A4991425011%2Cn%3A%214991426011%2Cn%3A6685269011%2Cn%3A6685289011&page='+str(page)+'&ie=UTF8&qid=1462681717'
     r = requests.get(page_url)
     r.text
 
@@ -103,4 +102,4 @@ for page in range(1,2):
 
 df = pd.DataFrame(paintings)
 
-df.to_csv("paintings_second_df.csv", index=False)
+df.to_csv("paintings_firstpass_df.csv", index=False)
