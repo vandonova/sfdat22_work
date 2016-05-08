@@ -67,7 +67,8 @@ for page in range(1,4):
         url_1.append(link.get('href'))
     
     url_list = url_1[::2]
-
+	url_list = random.shuffle(url_list)
+	
     paintings = []
     for url in url_list:
         try:
