@@ -103,4 +103,4 @@ for page in range(1,2):
 
 df = pd.DataFrame(paintings)
 
-df.to_csv("paintings_first_df.csv", index=False)
+df.to_csv("paintings_second_df.csv", index=False)
