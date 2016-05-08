@@ -5,6 +5,10 @@ import pandas as pd
 import time
 import random
 
+def encodestring(var):
+    if var is not None:
+        return var.encode('utf-8')
+
 def scrapePainting(url):
     r = requests.get(url)
     print r, url
@@ -49,12 +53,31 @@ def scrapePainting(url):
             height = float(size[0].replace('in.','').strip())
             width = float(size[1].replace('in.','').strip())
             depth = float(size[2].replace('in.','').strip())
+    
+    size_variations = b.find('div', {'id': 'variation_size_name'})
+    if size_variations is not None:
+        size = [a.strip() for a in size_variations.find('span', {'class': "a-size-base"}).text.split('x')]
+        
+        if len(size) == 2:
+            height = float(size[0].replace('in.','').strip())
+            width = float(size[1].replace('in.','').strip())
+            depth = 1.
+        elif len(size) == 3:
+            height = float(size[0].replace('in.','').strip())
+            width = float(size[1].replace('in.','').strip())
+            depth = float(size[2].replace('in.','').strip())
+            
+        price = size_variations.find('span', {'class': "a-size-mini"}).text.replace('$','').replace(',', '')
+        if '.' in price:
+            price = float(price.replace('.', ''))/100
+        else:
+            price = float(price)
+    
 
-    return {'url_id': url_id, 'artist': artist, 'title':title, 'image': image, 'price': price, 
-            'description':desc, 'height': height, 'width': width, 'size':size}
+    return {'url_id': encodestring(url_id), 'artist': encodestring(artist), 'title':encodestring(title), 'image': image, 'price': price, 
+            'description':encodestring(desc), 'height': height, 'width': width, 'size':size}
 
-
-for page in range(1,4):
+for page in range(1,2):
     
     page_url = "http://www.amazon.com/s/ref=sr_pg_3?rh=n%3A4991425011%2Cn%3A%214991426011%2Cn%3A6685269011%2Cn%3A6685289011&page="+str(page)+"&ie=UTF8&qid=1462467907"
     r = requests.get(page_url)
@@ -67,8 +90,7 @@ for page in range(1,4):
         url_1.append(link.get('href'))
     
     url_list = url_1[::2]
-	url_list = random.shuffle(url_list)
-	
+
     paintings = []
     for url in url_list:
         try:
@@ -78,4 +100,5 @@ for page in range(1,4):
         time.sleep(random.randint(5,20))
 
 df = pd.DataFrame(paintings)
+
 df.to_csv("paintings_first_df.csv", index=False)
